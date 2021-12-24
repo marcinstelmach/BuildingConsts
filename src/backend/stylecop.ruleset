@@ -74,6 +74,7 @@
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" /> <!-- XML comment analysis is disabled due to project configuration -->
     <Rule Id="SA1101" Action="None" /> <!-- Prefix local calls with this -->
+    <Rule Id="SA1200" Action="None" /> <!-- Usings should be in namespace -->
     <Rule Id="SA1305" Action="Warning" />
     <Rule Id="SA1309" Action="None" /> <!-- Field should not begin with an underscore -->
     <Rule Id="SA1412" Action="Warning" />
