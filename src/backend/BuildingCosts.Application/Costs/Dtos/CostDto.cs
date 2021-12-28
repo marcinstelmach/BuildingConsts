@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BuildingCosts.Application.Dtos;
+namespace BuildingCosts.Application.Costs.Dtos;
 
 public class CostDto
 {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace BuildingCosts.Api.ViewModels;
+namespace BuildingCosts.Api.Costs;
 
-public class CreateCostViewModel
+public class CreateCostRequest
 {
     public string Name { get; init; }
 

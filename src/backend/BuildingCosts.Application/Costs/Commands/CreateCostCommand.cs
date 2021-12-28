@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using BuildingCosts.Application.Dtos;
-using BuildingCosts.Shared.Application;
+﻿using System;
+using System.Collections.Generic;
+using BuildingCosts.Application.Costs.Dtos;
+using BuildingCosts.Shared.Application.Abstract;
+using BuildingCosts.Shared.BuildingBlocks;
+using OneOf;
 
 namespace BuildingCosts.Application.Costs.Commands;
 
-public class CreateCostCommand : ICommand
+public class CreateCostCommand : ICommand<OneOf<Guid, Error>>
 {
     public CreateCostCommand(string name, string description, string stage, string category, IEnumerable<PositionDto> positions)
     {

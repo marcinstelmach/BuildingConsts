@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BuildingCosts.Application.Dtos;
+using BuildingCosts.Application.Costs.Dtos;
 using BuildingCosts.Domain.Repositories;
-using BuildingCosts.Shared.Application;
+using BuildingCosts.Shared.Application.Abstract;
 using Dawn;
 
 namespace BuildingCosts.Application.Costs.Queries;

@@ -1,4 +1,4 @@
-﻿namespace BuildingCosts.Shared.Application;
+﻿namespace BuildingCosts.Shared.Application.Abstract;
 
 public interface IQueryHandler<in TQuery, TResult>
     where TQuery : IQuery<TResult>

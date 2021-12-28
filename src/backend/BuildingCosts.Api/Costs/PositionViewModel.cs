@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BuildingCosts.Api.ViewModels;
+namespace BuildingCosts.Api.Costs;
 
 public class PositionViewModel
 {

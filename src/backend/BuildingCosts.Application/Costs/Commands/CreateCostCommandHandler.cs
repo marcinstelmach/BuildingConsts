@@ -1,15 +1,17 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using BuildingCosts.Domain.Entities;
 using BuildingCosts.Domain.Repositories;
 using BuildingCosts.Domain.ValueObjects;
-using BuildingCosts.Shared.Application;
+using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks;
 using Dawn;
+using OneOf;
 
 namespace BuildingCosts.Application.Costs.Commands;
 
-public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand>
+public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand, OneOf<Guid, Error>>
 {
     private readonly IClock _clock;
     private readonly ICostsRepository _costsRepository;
@@ -22,7 +24,7 @@ public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task HandleAsync(CreateCostCommand request)
+    public async Task<OneOf<Guid, Error>> HandleAsync(CreateCostCommand request)
     {
         Guard.Argument(request, nameof(request)).NotNull();
 
@@ -31,11 +33,11 @@ public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand>
 
         var positions = request.Positions.Select(x => Position.Create(x.Name, x.Description, x.GrossPricePerEach, x.Count, x.Unit, _clock.GetUtcNow(), x.PaymentDateTime)).ToArray();
 
-        var all = await _costsRepository.GetCostsAsync();
-
         var cost = Cost.Create(request.Name, request.Description, stage, category, _clock.GetUtcNow(), positions);
         _costsRepository.AddCost(cost);
 
         await _unitOfWork.SaveChangesAsync();
+
+        return cost.Id;
     }
 }

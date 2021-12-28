@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using BuildingCosts.Application.Dtos;
-using BuildingCosts.Shared.Application;
+using BuildingCosts.Application.Costs.Dtos;
+using BuildingCosts.Shared.Application.Abstract;
 
 namespace BuildingCosts.Application.Costs.Queries;
 

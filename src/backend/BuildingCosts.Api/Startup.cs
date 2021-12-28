@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using BuildingCosts.Api.Services;
 using BuildingCosts.Application.Costs.Commands;
+using BuildingCosts.Application.Costs.Dtos;
 using BuildingCosts.Application.Costs.Queries;
-using BuildingCosts.Application.Dtos;
 using BuildingCosts.Domain.Repositories;
 using BuildingCosts.Infrastructure;
 using BuildingCosts.Infrastructure.Repositories;
-using BuildingCosts.Shared.Application;
+using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks;
 using Dawn;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using OneOf;
 
 [assembly: FunctionsStartup(typeof(BuildingCosts.Api.Startup))]
 
@@ -28,8 +30,9 @@ public class Startup : FunctionsStartup
                 Guard.Argument(Environment.GetEnvironmentVariable("CostsDatabaseName")).NotNull());
         });
 
-        builder.Services.AddTransient<IHandlerDispatcher, HandlerDispatcher>();
-        builder.Services.AddTransient<ICommandHandler<CreateCostCommand>, CreateCostCommandHandler>();
+        builder.Services.AddTransient<IQueryDispatcher, QueryDispatcher>();
+        builder.Services.AddTransient<ICommandDispatcher, CommandDispatcher>();
+        builder.Services.AddTransient<ICommandHandler<CreateCostCommand, OneOf<Guid, Error>>, CreateCostCommandHandler>();
         builder.Services.AddTransient<IQueryHandler<GetCostsQuery, IEnumerable<CostDto>>, GetCostsQueryHandler>();
 
         builder.Services.AddScoped<ICostsRepository, CostsRepository>();

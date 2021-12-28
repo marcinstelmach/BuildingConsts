@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
-namespace BuildingCosts.Application.Dtos;
+namespace BuildingCosts.Application.Costs.Dtos;
 
 public class PositionDto
 {
