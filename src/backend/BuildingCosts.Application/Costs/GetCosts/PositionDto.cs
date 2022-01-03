@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BuildingCosts.Application.Costs.Dtos;
+namespace BuildingCosts.Application.Costs.GetCosts;
 
 public class PositionDto
 {

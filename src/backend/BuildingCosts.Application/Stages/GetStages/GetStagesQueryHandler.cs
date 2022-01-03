@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BuildingCosts.Application.Stages.Dtos;
 using BuildingCosts.Domain.Repositories;
 using BuildingCosts.Shared.Application.Abstract;
 using Dawn;
 
-namespace BuildingCosts.Application.Stages.Queries;
+namespace BuildingCosts.Application.Stages.GetStages;
 
 public class GetStagesQueryHandler : IQueryHandler<GetStagesQuery, IEnumerable<StageDto>>
 {

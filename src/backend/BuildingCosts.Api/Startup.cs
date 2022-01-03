@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using BuildingCosts.Api.Services;
 using BuildingCosts.Application;
-using BuildingCosts.Application.Costs.Commands;
-using BuildingCosts.Application.Costs.Dtos;
-using BuildingCosts.Application.Costs.Queries;
 using BuildingCosts.Domain.Repositories;
 using BuildingCosts.Infrastructure;
 using BuildingCosts.Infrastructure.Repositories;
@@ -14,7 +10,6 @@ using Dawn;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using OneOf;
 
 [assembly: FunctionsStartup(typeof(BuildingCosts.Api.Startup))]
 
@@ -43,13 +38,13 @@ public class Startup : FunctionsStartup
                 .AsImplementedInterfaces()
                 .WithTransientLifetime());
 
-        builder.Services.AddTransient<IQueryDispatcher, QueryDispatcher>();
-        builder.Services.AddTransient<ICommandDispatcher, CommandDispatcher>();
-
-        builder.Services.AddScoped<ICostsRepository, CostsRepository>();
-        builder.Services.AddScoped<IStagesRepository, StagesRepository>();
-
-        builder.Services.AddTransient<IClock, Clock>();
-        builder.Services.AddScoped<IUnitOfWork>(x => x.GetRequiredService<CostsDbContext>());
+        builder.Services
+            .AddTransient<IQueryDispatcher, QueryDispatcher>()
+            .AddTransient<ICommandDispatcher, CommandDispatcher>()
+            .AddScoped<ICostsRepository, CostsRepository>()
+            .AddScoped<IStagesRepository, StagesRepository>()
+            .AddScoped<ICategoriesRepository, CategoriesRepository>()
+            .AddTransient<IClock, Clock>()
+            .AddScoped<IUnitOfWork>(x => x.GetRequiredService<CostsDbContext>());
     }
 }

@@ -9,7 +9,7 @@ using BuildingCosts.Shared.BuildingBlocks;
 using Dawn;
 using OneOf;
 
-namespace BuildingCosts.Application.Costs.Commands;
+namespace BuildingCosts.Application.Costs.CreateCost;
 
 public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand, OneOf<Guid, Error>>
 {

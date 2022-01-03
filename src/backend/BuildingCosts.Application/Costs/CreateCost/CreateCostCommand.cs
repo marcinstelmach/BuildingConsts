@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using BuildingCosts.Application.Costs.Dtos;
+using BuildingCosts.Application.Costs.GetCosts;
 using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks;
 using OneOf;
 
-namespace BuildingCosts.Application.Costs.Commands;
+namespace BuildingCosts.Application.Costs.CreateCost;
 
 public class CreateCostCommand : ICommand<OneOf<Guid, Error>>
 {

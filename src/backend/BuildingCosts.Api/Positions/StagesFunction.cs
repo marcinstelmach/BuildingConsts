@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using BuildingCosts.Application.Stages.Dtos;
-using BuildingCosts.Application.Stages.Queries;
+using BuildingCosts.Application.Stages.GetStages;
 using BuildingCosts.Shared.Application.Abstract;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

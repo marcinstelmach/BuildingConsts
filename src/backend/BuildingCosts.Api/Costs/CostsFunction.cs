@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BuildingCosts.Application.Costs.Commands;
-using BuildingCosts.Application.Costs.Dtos;
-using BuildingCosts.Application.Costs.Queries;
+using BuildingCosts.Application.Costs.CreateCost;
+using BuildingCosts.Application.Costs.GetCosts;
 using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks;
 using Microsoft.AspNetCore.Http;
@@ -39,7 +38,7 @@ namespace BuildingCosts.Api.Costs
                 Description = x.Description,
                 Count = x.Count,
                 GrossPricePerEach = x.GrossPricePerEach,
-                PaymentDate = x.PaymentDate,
+                PaymentDate = x.PaymentDate.HasValue ? DateOnly.FromDateTime(x.PaymentDate.Value) : null,
                 Unit = x.Unit
             });
 

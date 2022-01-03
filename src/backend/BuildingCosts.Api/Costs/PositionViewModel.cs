@@ -14,5 +14,5 @@ public record PositionViewModel
 
     public string Unit { get; init; }
 
-    public DateOnly? PaymentDate { get; init; }
+    public DateTime? PaymentDate { get; init; }
 }
