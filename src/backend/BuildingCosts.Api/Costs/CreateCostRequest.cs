@@ -2,7 +2,7 @@
 
 namespace BuildingCosts.Api.Costs;
 
-public class CreateCostRequest
+public record CreateCostRequest
 {
     public string Name { get; init; }
 

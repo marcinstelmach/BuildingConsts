@@ -7,7 +7,7 @@ namespace BuildingCosts.Domain.ValueObjects;
 
 public class Position : ValueObject<Position>
 {
-    private Position(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateTime? paymentDateTime)
+    private Position(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateOnly? paymentDate)
     {
         Name = name;
         Description = description;
@@ -15,7 +15,7 @@ public class Position : ValueObject<Position>
         Count = count;
         Unit = unit;
         CreationDateTime = creationDateTime;
-        PaymentDateTime = paymentDateTime;
+        PaymentDate = paymentDate;
     }
 
     private Position()
@@ -34,13 +34,13 @@ public class Position : ValueObject<Position>
 
     public decimal FinalPrice => Count * GrossPricePerEach;
 
-    public bool IsPayed => PaymentDateTime.HasValue;
+    public bool IsPayed => PaymentDate.HasValue;
 
     public DateTime CreationDateTime { get; private set; }
 
-    public DateTime? PaymentDateTime { get; private set; }
+    public DateOnly? PaymentDate { get; private set; }
 
-    public static Position Create(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateTime? paymentDateTime)
+    public static Position Create(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateOnly? paymentDate)
     {
         Guard.Argument(name).NotNull().NotWhiteSpace();
         Guard.Argument(description).NotNull().NotWhiteSpace();
@@ -49,12 +49,12 @@ public class Position : ValueObject<Position>
         Guard.Argument(unit).NotNull().NotWhiteSpace();
         Guard.Argument(creationDateTime).LessThan(DateTime.UtcNow);
 
-        if (paymentDateTime.HasValue && paymentDateTime.Value > DateTime.UtcNow)
+        if (paymentDate.HasValue && paymentDate.Value > DateOnly.FromDateTime(DateTime.UtcNow))
         {
-            throw new ArgumentException("Cannot be in future", nameof(paymentDateTime));
+            throw new ArgumentException("Cannot be in future", nameof(paymentDate));
         }
 
-        return new Position(name, description, grossPricePerEach, count, unit, creationDateTime, paymentDateTime);
+        return new Position(name, description, grossPricePerEach, count, unit, creationDateTime, paymentDate);
     }
 
     protected override IEnumerable<object> GetAtomicValues()
@@ -67,6 +67,6 @@ public class Position : ValueObject<Position>
         yield return CreationDateTime;
         yield return FinalPrice;
         yield return IsPayed;
-        yield return PaymentDateTime;
+        yield return PaymentDate;
     }
 }

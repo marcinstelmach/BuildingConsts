@@ -2,7 +2,7 @@
 
 namespace BuildingCosts.Api.Costs;
 
-public class PositionViewModel
+public record PositionViewModel
 {
     public string Name { get; init; }
 
@@ -14,5 +14,5 @@ public class PositionViewModel
 
     public string Unit { get; init; }
 
-    public DateTime? PaymentDateTime { get; init; }
+    public DateOnly? PaymentDate { get; init; }
 }

@@ -38,7 +38,7 @@ public class GetCostsQueryHandler : IQueryHandler<GetCostsQuery, IEnumerable<Cos
                 Description = y.Description,
                 Count = y.Count,
                 Unit = y.Unit,
-                PaymentDateTime = y.PaymentDateTime,
+                PaymentDate = y.PaymentDate,
                 GrossPricePerEach = y.GrossPricePerEach
             })
         });

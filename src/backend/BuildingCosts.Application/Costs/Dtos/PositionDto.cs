@@ -14,5 +14,5 @@ public class PositionDto
 
     public string Unit { get; init; }
 
-    public DateTime? PaymentDateTime { get; init; }
+    public DateOnly? PaymentDate { get; init; }
 }

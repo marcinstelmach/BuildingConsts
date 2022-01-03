@@ -18,7 +18,7 @@ public class CostsRepository : ICostsRepository
 
     public async Task<IEnumerable<Cost>> GetCostsAsync()
     {
-        return await _costsDbContext.Costs.ToArrayAsync();
+        return await _costsDbContext.Costs.AsNoTrackingWithIdentityResolution().ToArrayAsync();
     }
 
     public void AddCost(Cost cost)

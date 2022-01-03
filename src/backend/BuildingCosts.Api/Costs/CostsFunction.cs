@@ -39,7 +39,7 @@ namespace BuildingCosts.Api.Costs
                 Description = x.Description,
                 Count = x.Count,
                 GrossPricePerEach = x.GrossPricePerEach,
-                PaymentDateTime = x.PaymentDateTime,
+                PaymentDate = x.PaymentDate,
                 Unit = x.Unit
             });
 

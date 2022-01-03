@@ -31,7 +31,7 @@ public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand, OneOf
         var stage = Stage.Create(request.Stage);
         var category = Category.Create(request.Category);
 
-        var positions = request.Positions.Select(x => Position.Create(x.Name, x.Description, x.GrossPricePerEach, x.Count, x.Unit, _clock.GetUtcNow(), x.PaymentDateTime)).ToArray();
+        var positions = request.Positions.Select(x => Position.Create(x.Name, x.Description, x.GrossPricePerEach, x.Count, x.Unit, _clock.GetUtcNow(), x.PaymentDate)).ToArray();
 
         var cost = Cost.Create(request.Name, request.Description, stage, category, _clock.GetUtcNow(), positions);
         _costsRepository.AddCost(cost);
