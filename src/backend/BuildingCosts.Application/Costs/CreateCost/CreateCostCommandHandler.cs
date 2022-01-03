@@ -6,6 +6,7 @@ using BuildingCosts.Domain.Repositories;
 using BuildingCosts.Domain.ValueObjects;
 using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks;
+using BuildingCosts.Shared.BuildingBlocks.Errors;
 using Dawn;
 using OneOf;
 

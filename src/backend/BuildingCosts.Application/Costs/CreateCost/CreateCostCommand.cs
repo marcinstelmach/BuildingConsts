@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using BuildingCosts.Application.Costs.GetCosts;
 using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks;
+using BuildingCosts.Shared.BuildingBlocks.Errors;
 using OneOf;
 
 namespace BuildingCosts.Application.Costs.CreateCost;

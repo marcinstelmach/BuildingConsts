@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BuildingCosts.Application.Costs.CreateCost;
+using BuildingCosts.Application.Costs.GetCost;
 using BuildingCosts.Application.Costs.GetCosts;
 using BuildingCosts.Shared.Application.Abstract;
-using BuildingCosts.Shared.BuildingBlocks;
+using BuildingCosts.Shared.BuildingBlocks.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using OneOf;
+using CostDto = BuildingCosts.Application.Costs.GetCosts.CostDto;
+using PositionDto = BuildingCosts.Application.Costs.GetCosts.PositionDto;
 
 namespace BuildingCosts.Api.Costs
 {
@@ -60,6 +63,21 @@ namespace BuildingCosts.Api.Costs
 
             var costs = await _queryDispatcher.DispatchQueryAsync<GetCostsQuery, IEnumerable<CostDto>>(query);
             return new OkObjectResult(costs);
+        }
+
+        [FunctionName(nameof(GetCostAsync))]
+        public async Task<IActionResult> GetCostAsync([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "costs/{id:guid}")] HttpRequest request, Guid id)
+        {
+            var query = new GetCostByIdQuery(id);
+
+            var result = await _queryDispatcher.DispatchQueryAsync<GetCostByIdQuery, OneOf<DetailedCostDto, Error>>(query);
+            return result.Match<IActionResult>(
+                dto => new OkObjectResult(dto),
+                error => error switch
+                {
+                    NotFoundError notFoundError => new NotFoundObjectResult(new ErrorViewModel(notFoundError.Message)),
+                    _ => throw new InvalidOperationException()
+                });
         }
     }
 }
