@@ -45,7 +45,9 @@ public class GetCostByIdQueryHandler : IQueryHandler<GetCostByIdQuery, OneOf<Det
                 Unit = y.Unit,
                 CreationDateTime = y.CreationDateTime,
                 PaymentDate = y.PaymentDate,
-                GrossPricePerEach = y.GrossPricePerEach
+                GrossPricePerEach = y.GrossPricePerEach,
+                FinalPrice = y.FinalPrice,
+                IsPayed = y.IsPayed
             })
         };
 

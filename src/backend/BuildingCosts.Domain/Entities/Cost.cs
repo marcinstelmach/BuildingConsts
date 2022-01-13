@@ -42,16 +42,71 @@ public class Cost : Entity<Guid>, IAggregateRoot
 
     public IReadOnlyList<Position> Positions => _positions;
 
-    public static Cost Create(string name, string description, Stage stage, Category category, DateTime creationDateTime, ICollection<Position> positions)
+    public static Cost Create(string name, string description, string stageName, string categoryName, DateTime creationDateTime, ICollection<Position> positions)
     {
-        Guard.Argument(name).NotNull().NotWhiteSpace();
-        Guard.Argument(description).NotNull().NotWhiteSpace();
-        Guard.Argument(description).NotNull().NotWhiteSpace();
-        Guard.Argument(stage).NotNull();
-        Guard.Argument(category).NotNull();
-        Guard.Argument(creationDateTime).LessThan(DateTime.UtcNow);
+        Guard.Argument(name, nameof(name)).NotNull().NotWhiteSpace();
+        Guard.Argument(description, nameof(description)).NotNull().NotWhiteSpace();
+        Guard.Argument(stageName, nameof(stageName)).NotNull().NotWhiteSpace();
+        Guard.Argument(categoryName, nameof(categoryName)).NotNull().NotWhiteSpace();
+        Guard.Argument(creationDateTime, nameof(creationDateTime)).LessThan(DateTime.UtcNow);
         Guard.Argument(positions, nameof(positions)).NotNull().NotEmpty();
 
+        var stage = Stage.Create(stageName);
+        var category = Category.Create(categoryName);
+
         return new Cost(name, description, stage, category, creationDateTime, positions);
+    }
+
+    public void UpdateName(string name)
+    {
+        Guard.Argument(name, nameof(name)).NotNull().NotWhiteSpace();
+        if (Name != name)
+        {
+            Name = name;
+        }
+    }
+
+    public void UpdateDescription(string description)
+    {
+        Guard.Argument(description, nameof(description)).NotNull().NotWhiteSpace();
+        if (Description != description)
+        {
+            Description = description;
+        }
+    }
+
+    public void UpdateStage(string stageName)
+    {
+        Guard.Argument(stageName, nameof(stageName)).NotNull().NotWhiteSpace();
+        var newStage = Stage.Create(stageName);
+        if (Stage != newStage)
+        {
+            Stage = newStage;
+        }
+    }
+
+    public void UpdateCategory(string categoryName)
+    {
+        Guard.Argument(categoryName, nameof(categoryName)).NotNull().NotWhiteSpace();
+        var newCategory = Category.Create(categoryName);
+        if (Category != newCategory)
+        {
+            Category = newCategory;
+        }
+    }
+
+    public void UpdatePositions(ICollection<Position> positions)
+    {
+        Guard.Argument(positions, nameof(positions)).NotNull().NotEmpty();
+
+        var positionsForDeletion = _positions.Where(x => !positions.Contains(x)).ToArray();
+        var positionsForAdd = positions.Where(x => !_positions.Contains(x)).ToArray();
+
+        foreach (var position in positionsForDeletion)
+        {
+            _positions.Remove(position);
+        }
+
+        _positions.AddRange(positionsForAdd);
     }
 }

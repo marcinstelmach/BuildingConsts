@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BuildingCosts.Api.Costs;
 
-public record CreateCostRequest
+public record UpdateCostRequest
 {
     public string Name { get; init; }
 
@@ -15,7 +15,7 @@ public record CreateCostRequest
 
     public IEnumerable<PositionViewModel> Positions { get; init; }
 
-    public record PositionViewModel
+    public record struct PositionViewModel
     {
         public string Name { get; init; }
 

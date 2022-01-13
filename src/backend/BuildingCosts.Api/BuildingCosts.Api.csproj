@@ -10,22 +10,12 @@
 		<PackageReference Include="Microsoft.NET.Sdk.Functions" Version="4.0.1" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-		<WarningsAsErrors />
-		<CodeAnalysisRuleSet>../stylecop.ruleset</CodeAnalysisRuleSet>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\BuildingCosts.Application\BuildingCosts.Application.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Scrutor" Version="3.3.0" />
-		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

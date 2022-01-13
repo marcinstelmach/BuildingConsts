@@ -5,12 +5,15 @@ public abstract class ValueObject<TValueObject> : IEquatable<ValueObject<TValueO
 {
     public static bool operator ==(ValueObject<TValueObject> left, ValueObject<TValueObject> right)
     {
-        if (ReferenceEquals(left, null) ^ ReferenceEquals(right, null))
+        if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
         {
-            return false;
+            return true;
         }
 
-        return ReferenceEquals(left, null) || left.Equals(right);
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+            return false;
+
+        return left.Equals(right);
     }
 
     public static bool operator !=(ValueObject<TValueObject> left, ValueObject<TValueObject> right)

@@ -7,7 +7,7 @@ namespace BuildingCosts.Domain.ValueObjects;
 
 public class Position : ValueObject<Position>
 {
-    private Position(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateOnly? paymentDate)
+    private Position(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateTime? paymentDate)
     {
         Name = name;
         Description = description;
@@ -38,9 +38,9 @@ public class Position : ValueObject<Position>
 
     public DateTime CreationDateTime { get; private set; }
 
-    public DateOnly? PaymentDate { get; private set; }
+    public DateTime? PaymentDate { get; private set; }
 
-    public static Position Create(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateOnly? paymentDate)
+    public static Position Create(string name, string description, decimal grossPricePerEach, int count, string unit, DateTime creationDateTime, DateTime? paymentDate)
     {
         Guard.Argument(name).NotNull().NotWhiteSpace();
         Guard.Argument(description).NotNull().NotWhiteSpace();
@@ -49,7 +49,7 @@ public class Position : ValueObject<Position>
         Guard.Argument(unit).NotNull().NotWhiteSpace();
         Guard.Argument(creationDateTime).LessThan(DateTime.UtcNow);
 
-        if (paymentDate.HasValue && paymentDate.Value > DateOnly.FromDateTime(DateTime.UtcNow))
+        if (paymentDate.HasValue && paymentDate.Value > DateTime.UtcNow)
         {
             throw new ArgumentException("Cannot be in future", nameof(paymentDate));
         }

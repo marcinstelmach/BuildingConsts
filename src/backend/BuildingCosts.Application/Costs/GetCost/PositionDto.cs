@@ -2,7 +2,7 @@
 
 namespace BuildingCosts.Application.Costs.GetCost;
 
-public record PositionDto
+public record struct PositionDto
 {
     public string Name { get; init; }
 
@@ -14,7 +14,11 @@ public record PositionDto
 
     public string Unit { get; init; }
 
+    public decimal FinalPrice { get; init; }
+
+    public bool IsPayed { get; init; }
+
     public DateTime CreationDateTime { get; init; }
 
-    public DateOnly? PaymentDate { get; init; }
+    public DateTime? PaymentDate { get; init; }
 }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BuildingCosts.Application.Costs.CreateCost;
 using BuildingCosts.Application.Costs.GetCost;
 using BuildingCosts.Application.Costs.GetCosts;
+using BuildingCosts.Application.Costs.UpdateCost;
 using BuildingCosts.Shared.Application.Abstract;
 using BuildingCosts.Shared.BuildingBlocks.Errors;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +42,7 @@ namespace BuildingCosts.Api.Costs
                 Description = x.Description,
                 Count = x.Count,
                 GrossPricePerEach = x.GrossPricePerEach,
-                PaymentDate = x.PaymentDate.HasValue ? DateOnly.FromDateTime(x.PaymentDate.Value) : null,
+                PaymentDate = x.PaymentDate,
                 Unit = x.Unit
             });
 
@@ -76,6 +77,33 @@ namespace BuildingCosts.Api.Costs
                 error => error switch
                 {
                     NotFoundError notFoundError => new NotFoundObjectResult(new ErrorViewModel(notFoundError.Message)),
+                    _ => throw new InvalidOperationException()
+                });
+        }
+
+        [FunctionName(nameof(UpdateCostAsync))]
+        public async Task<IActionResult> UpdateCostAsync([HttpTrigger(AuthorizationLevel.Anonymous, "put", Route = "costs/{id:guid}")] UpdateCostRequest request, Guid id)
+        {
+            var command = new UpdateCostCommand(
+                id,
+                request.Name,
+                request.Description,
+                request.Stage,
+                request.Category,
+                request.Positions.Select(x => new UpdateCostCommand.PositionDto(
+                    x.Name,
+                    x.Description,
+                    x.GrossPricePerEach,
+                    x.Count,
+                    x.Unit,
+                    x.PaymentDate)));
+
+            var result = await _commandDispatcher.DispatchCommandAsync<UpdateCostCommand, OneOf<CostSuccessfullyUpdated, Error>>(command);
+            return result.Match<IActionResult>(
+                _ => new AcceptedResult(),
+                error => error switch
+                {
+                    BadRequestError badRequestError => new BadRequestObjectResult(new ErrorViewModel(badRequestError.Message)),
                     _ => throw new InvalidOperationException()
                 });
         }

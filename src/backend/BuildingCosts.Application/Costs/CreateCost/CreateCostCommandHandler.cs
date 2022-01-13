@@ -29,16 +29,15 @@ public class CreateCostCommandHandler : ICommandHandler<CreateCostCommand, OneOf
     {
         Guard.Argument(request, nameof(request)).NotNull();
 
-        var stage = Stage.Create(request.Stage);
-        var category = Category.Create(request.Category);
+        var positions = request.Positions
+            .Select(x => Position.Create(
+                x.Name, x.Description, x.GrossPricePerEach, x.Count, x.Unit, _clock.GetUtcNow(), x.PaymentDate))
+            .ToArray();
 
-        var positions = request.Positions.Select(x => Position.Create(x.Name, x.Description, x.GrossPricePerEach, x.Count, x.Unit, _clock.GetUtcNow(), x.PaymentDate)).ToArray();
-
-        var cost = Cost.Create(request.Name, request.Description, stage, category, _clock.GetUtcNow(), positions);
+        var cost = Cost.Create(request.Name, request.Description, request.Stage, request.Category, _clock.GetUtcNow(), positions);
+        
         _costsRepository.AddCost(cost);
-
         await _unitOfWork.SaveChangesAsync();
-
         return cost.Id;
     }
 }
