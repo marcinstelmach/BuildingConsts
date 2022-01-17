@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BuildingCosts.Application.Categories.GetCategories;
 using BuildingCosts.Shared.Application.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +22,7 @@ public class CategoriesFunction
         HttpRequest request)
     {
         var query = new GetCategoriesQuery();
-        var dtos = await _queryDispatcher.DispatchQueryAsync<GetCategoriesQuery, IEnumerable<CategoryDto>>(query);
+        var dtos = await _queryDispatcher.DispatchQueryAsync(query);
 
         return new OkObjectResult(dtos);
     }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using BuildingCosts.Application.Stages.GetStages;
 using BuildingCosts.Shared.Application.Abstract;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +23,7 @@ public class StagesFunction
     {
         var query = new GetStagesQuery();
 
-        var stages = await _queryDispatcher.DispatchQueryAsync<GetStagesQuery, IEnumerable<StageDto>>(query);
+        var stages = await _queryDispatcher.DispatchQueryAsync(query);
         return new OkObjectResult(stages);
     }
 }

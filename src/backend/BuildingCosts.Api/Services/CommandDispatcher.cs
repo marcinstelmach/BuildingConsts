@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using BuildingCosts.Shared.Application.Abstract;
 using Dawn;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace BuildingCosts.Api.Services;
 
@@ -14,13 +13,14 @@ public class CommandDispatcher : ICommandDispatcher
     {
         _serviceProvider = serviceProvider;
     }
-
-    public async Task<TResult> DispatchCommandAsync<TCommand, TResult>(TCommand command)
-        where TCommand : class, ICommand<TResult>
+    
+    public async Task<TResult> DispatchCommandAsync<TResult>(ICommand<TResult> command)
     {
         Guard.Argument(command, nameof(command)).NotNull();
 
-        var handler = _serviceProvider.GetRequiredService<ICommandHandler<TCommand, TResult>>();
-        return await handler.HandleAsync(command);
+        var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResult));
+        var handler = _serviceProvider.GetService(handlerType);
+        var handleMethod = handlerType.GetMethod(nameof(ICommandHandler<ICommand<TResult>, TResult>.HandleAsync));
+        return await (Task<TResult>)handleMethod.Invoke(handler, new object[] { command });
     }
 }

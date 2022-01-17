@@ -15,12 +15,13 @@ public class QueryDispatcher : IQueryDispatcher
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<TResult> DispatchQueryAsync<TQuery, TResult>(TQuery query)
-        where TQuery : class, IQuery<TResult>
+    public async Task<TResult> DispatchQueryAsync<TResult>(IQuery<TResult> query)
     {
         Guard.Argument(query, nameof(query)).NotNull();
 
-        var handler = _serviceProvider.GetRequiredService<IQueryHandler<TQuery, TResult>>();
-        return await handler.HandleAsync(query);
+        var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResult));
+        var handler = _serviceProvider.GetService(handlerType);
+        var handleMethod = handlerType.GetMethod(nameof(IQueryHandler<IQuery<TResult>, TResult>.HandleAsync));
+        return await (Task<TResult>)handleMethod.Invoke(handler, new object[] { query });
     }
 }
