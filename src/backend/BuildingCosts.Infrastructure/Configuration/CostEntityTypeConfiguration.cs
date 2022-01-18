@@ -14,6 +14,8 @@ public class CostEntityTypeConfiguration : IEntityTypeConfiguration<Cost>
 
         builder.HasNoDiscriminator();
 
+        builder.HasQueryFilter(x => x.IsDeleted == false);
+
         builder.HasPartitionKey(x => x.Id);
 
         builder.OwnsOne(x => x.Category);

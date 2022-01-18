@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BuildingCosts.Application.Costs.CreateCost;
+using BuildingCosts.Application.Costs.DeleteCost;
 using BuildingCosts.Application.Costs.GetCost;
 using BuildingCosts.Application.Costs.GetCosts;
 using BuildingCosts.Application.Costs.UpdateCost;
@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using OneOf;
-using CostDto = BuildingCosts.Application.Costs.GetCosts.CostDto;
 using PositionDto = BuildingCosts.Application.Costs.GetCosts.PositionDto;
 
 namespace BuildingCosts.Api.Costs
@@ -48,7 +46,7 @@ namespace BuildingCosts.Api.Costs
 
             var command = new CreateCostCommand(request.Name, request.Description, request.Stage, request.Category, positionDtos);
 
-            var result = await _commandDispatcher.DispatchCommandAsync<CreateCostCommand, OneOf<Guid, Error>>(command);
+            var result = await _commandDispatcher.DispatchCommandAsync(command);
 
             return result.Match<IActionResult>(
                 id => new OkObjectResult(new { id = id }),
@@ -62,7 +60,7 @@ namespace BuildingCosts.Api.Costs
         {
             var query = new GetCostsQuery();
 
-            var costs = await _queryDispatcher.DispatchQueryAsync<GetCostsQuery, IEnumerable<CostDto>>(query);
+            var costs = await _queryDispatcher.DispatchQueryAsync(query);
             return new OkObjectResult(costs);
         }
 
@@ -71,7 +69,7 @@ namespace BuildingCosts.Api.Costs
         {
             var query = new GetCostByIdQuery(id);
 
-            var result = await _queryDispatcher.DispatchQueryAsync<GetCostByIdQuery, OneOf<DetailedCostDto, Error>>(query);
+            var result = await _queryDispatcher.DispatchQueryAsync(query);
             return result.Match<IActionResult>(
                 dto => new OkObjectResult(dto),
                 error => error switch
@@ -98,7 +96,7 @@ namespace BuildingCosts.Api.Costs
                     x.Unit,
                     x.PaymentDate)));
 
-            var result = await _commandDispatcher.DispatchCommandAsync<UpdateCostCommand, OneOf<CostSuccessfullyUpdated, Error>>(command);
+            var result = await _commandDispatcher.DispatchCommandAsync(command);
             return result.Match<IActionResult>(
                 _ => new AcceptedResult(),
                 error => error switch
@@ -106,6 +104,17 @@ namespace BuildingCosts.Api.Costs
                     BadRequestError badRequestError => new BadRequestObjectResult(new ErrorViewModel(badRequestError.Message)),
                     _ => throw new InvalidOperationException()
                 });
+        }
+
+        [FunctionName(nameof(DeleteCostAsync))]
+        public async Task<IActionResult> DeleteCostAsync([HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = "costs/{id:guid}")] HttpRequest httpRequest, Guid id)
+        {
+            var command = new DeleteCostCommand(id);
+
+            var result = await _commandDispatcher.DispatchCommandAsync(command);
+            return result.Match<IActionResult>(
+                _ => new NoContentResult(),
+                _ => new NotFoundResult());
         }
     }
 }

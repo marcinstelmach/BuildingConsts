@@ -19,6 +19,7 @@ public class Cost : Entity<Guid>, IAggregateRoot
         Stage = stage;
         Category = category;
         CreationDateTime = creationDateTime;
+        IsDeleted = false;
         _positions.AddRange(positions);
     }
 
@@ -35,6 +36,8 @@ public class Cost : Entity<Guid>, IAggregateRoot
     public Category Category { get; private set; }
 
     public DateTime CreationDateTime { get; private set; }
+
+    public bool IsDeleted { get; private set; }
 
     public bool IsPayed => _positions.All(x => x.IsPayed);
 
@@ -108,5 +111,10 @@ public class Cost : Entity<Guid>, IAggregateRoot
         }
 
         _positions.AddRange(positionsForAdd);
+    }
+
+    public void DeleteCost()
+    {
+        IsDeleted = true;
     }
 }
