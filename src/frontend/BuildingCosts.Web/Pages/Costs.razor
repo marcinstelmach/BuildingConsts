@@ -1,0 +1,54 @@
+﻿@page "/costs"
+@using BuildingCosts.Web.Contracts.GetCosts
+
+<PageTitle>Costs</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <h3>Costs</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nazwa</th>
+                <th scope="col">Etap</th>
+                <th scope="col">Kategoria</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>@cost.Name</td>
+                <td>@cost.Category</td>
+                <td>ddd</td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>ssss</td>
+            </tr>
+            <tr>
+                <th scope="row">3</th>
+                <td colspan="2">Larry the Bird</td>
+                <td>twitter</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code {
+
+    private GetCosts cost = new()
+    {
+        Name = "SOmeName",
+        Category = "CCategoryyt"
+    };
+
+}
