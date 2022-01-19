@@ -1,18 +1,12 @@
-﻿using System.Collections.Generic;
-using BuildingCosts.Shared.BuildingBlocks;
-using Dawn;
+﻿using Dawn;
 
 namespace BuildingCosts.Domain.ValueObjects;
 
-public class Category : ValueObject<Category>
+public record struct Category
 {
     private Category(string name)
     {
         Name = name;
-    }
-
-    private Category()
-    {
     }
 
     public string Name { get; private set; }
@@ -21,10 +15,5 @@ public class Category : ValueObject<Category>
     {
         Guard.Argument(name).NotNull().NotWhiteSpace();
         return new Category(name);
-    }
-
-    protected override IEnumerable<object> GetAtomicValues()
-    {
-        yield return Name;
     }
 }
