@@ -1,0 +1,63 @@
+﻿@page "/costs"
+@using BuildingCosts.Client.Costs
+@using BuildingCosts.Client.Costs.GetCosts
+
+<PageTitle>Costs</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <h3>Costs</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nazwa</th>
+                <th scope="col">Etap</th>
+                <th scope="col">Kategoria</th>
+                <th scope="col">Cena</th>
+                <th scope="col">Opłacone</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var cost in _costs)
+            {
+                <tr>
+                    <th scope="row">@_counter</th>
+                    <td>@cost.Name</td>
+                    <td>@cost.Stage</td>
+                    <td>@cost.Category</td>
+                    <td>@cost.GrossPrice</td>
+                    <td>@cost.IsPayed</td>
+                </tr>
+                IncrementCounter();
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@code
+{
+    [Inject]
+    private ICostsService CostsService { get; set; }
+
+    private IEnumerable<CostDto> _costs;
+    private int _counter = 1;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _costs = await CostsService.GetCostsAsync();
+    }
+
+    private void IncrementCounter()
+    {
+        _counter++;
+    }
+}

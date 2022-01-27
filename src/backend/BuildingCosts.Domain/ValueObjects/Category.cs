@@ -2,7 +2,7 @@
 
 namespace BuildingCosts.Domain.ValueObjects;
 
-public record struct Category
+public record Category
 {
     private Category(string name)
     {
