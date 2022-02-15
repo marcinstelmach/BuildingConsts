@@ -2,6 +2,7 @@
 @using BuildingCosts.Client.Services.Stages
 @using BuildingCosts.Client.Services.Categories.GetCategoriesDtos
 @using BuildingCosts.Client.Services.Categories
+@using BuildingCosts.Client.Services.Costs
 @using BuildingCosts.Client.Services.Costs.CreateCost
 
 <PageTitle>Dodaj koszt</PageTitle>
@@ -136,6 +137,9 @@
 
     [Inject]
     private ICategoriesService CategoriesService { get; set; }
+    
+    [Inject]
+    private ICostsService CostsService { get; set; }
 
     private CreateCostDto _model = new();
     private EditContext _costsContext;
@@ -162,13 +166,9 @@
         await base.OnInitializedAsync();
     }
 
-    private void SendAddCostForm()
+    private async Task SendAddCostForm()
     {
-        Console.WriteLine($"{_model.Name} {_model.Category} {_model.Description} {_model.Stage}");
-        foreach (var position in _model.Positions)
-        {
-            Console.WriteLine($"{position.Name} {position.Description} {position.GrossPricePerEach} {position.Unit} {position.Count} {position.PaymentDate}");
-        }
+        await CostsService.AddCostAsync(_model);
     }
 
     private void AddPosition()
