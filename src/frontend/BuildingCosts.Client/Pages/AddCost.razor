@@ -1,0 +1,191 @@
+﻿@page "/add-cost"
+@using BuildingCosts.Client.Services.Stages
+@using BuildingCosts.Client.Services.Categories.GetCategoriesDtos
+@using BuildingCosts.Client.Services.Categories
+@using BuildingCosts.Client.Services.Costs.CreateCost
+
+<PageTitle>Dodaj koszt</PageTitle>
+
+<div class="row">
+    <div class="col">
+        <h3>Dodaj koszt</h3>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="row">
+            <div class="col">
+                <EditForm EditContext="_positionsContext" OnValidSubmit="AddPosition">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Pozycje</h5>
+                            <div class="mb-3">
+                                <label for="position-name" class="form-label">Nazwa</label>
+                                <InputText @bind-Value="_tempPosition.Name" class="form-control" id="position-name"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="position-description" class="form-label">Opis</label>
+                                <InputText @bind-Value="_tempPosition.Description" class="form-control" id="position-description"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="position-grossPricePerEach" class="form-label">Cena brutto za jednostkę</label>
+                                <InputNumber @bind-Value="_tempPosition.GrossPricePerEach" class="form-control" id="position-grossPricePerEach"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="position-count" class="form-label">Ilość</label>
+                                <InputNumber @bind-Value="_tempPosition.Count" class="form-control" id="position-count"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="position-unit" class="form-label">Jednostka</label>
+                                <InputText @bind-Value="_tempPosition.Unit" class="form-control" id="position-unit"/>
+                            </div>
+                            <div class="mb-3">
+                                <label for="position-paymentDate" class="form-label">Data płatności</label>
+                                <InputDate @bind-Value="_tempPosition.PaymentDate" class="form-control" id="position-paymentDate" CurrentValue="@DateTime.Now"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Dodaj pozycję</button>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+            <div class="col">
+                @if (_model.Positions.Any())
+                {
+                    @foreach (var position in _model.Positions)
+                    {
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h5 class="card-title">@position.Name</h5>
+                                <p>
+                                    <b>Opis:</b> @position.Description
+                                </p>
+                                <p>
+                                    <b>Cena za sztukę:</b> @position.GrossPricePerEach
+                                </p>
+                                <p>
+                                    <b>Ilość:</b> @position.Count
+                                </p>
+                                <p>
+                                    <b>Jednostka:</b> @position.Unit
+                                </p>
+                                <p>
+                                    <b>Data płatności:</b> @position.PaymentDate.ToString("d")
+                                </p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Dodaj Koszt</h5>
+                <EditForm EditContext="_costsContext" OnValidSubmit="SendAddCostForm">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nazwa</label>
+                        <InputText @bind-Value="_model.Name" class="form-control" id="name"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Opis</label>
+                        <InputText @bind-Value="_model.Description" class="form-control" id="description"/>
+                    </div>
+                    <div class="mb-3">
+                        <InputSelect @bind-Value="_model.Stage" class="form-select" aria-label="Etap">
+                            <option value="">Wybierz etap ...</option>
+                            @foreach (var stage in _stages)
+                            {
+                                <option value="@stage.Name">@stage.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-stage" class="form-label">Dodaj nowy etap</label>
+                        <InputText @bind-Value="_model.Stage" class="form-control" id="add-stage "/>
+                    </div>
+                    <div class="mb-3">
+                        <InputSelect @bind-Value="_model.Category" class="form-select" aria-label="Kategoria">
+                            <option value="">Wybierz kategorię ...</option>
+                            @foreach (var category in _categories)
+                            {
+                                <option value="@category.Name">@category.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="mb-3">
+                        <label for="add-category" class="form-label">Dodaj nową kategorię</label>
+                        <InputText @bind-Value="_model.Category" class="form-control" id="add-category "/>
+                    </div>
+                    <button type="button" class="btn btn-info" @onclick="CopyPositionInfoToCost">Kopiuj z pozycji</button>
+                    <button type="submit" class="btn btn-success" disabled="@AddCostButtonDisabled">Dodaj koszt</button>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Inject]
+    private IStagesService StagesService { get; set; }
+
+    [Inject]
+    private ICategoriesService CategoriesService { get; set; }
+
+    private CreateCostDto _model = new();
+    private EditContext _costsContext;
+    private PositionDto _tempPosition = new();
+    private EditContext _positionsContext;
+
+    private IEnumerable<StageDto> _stages = Enumerable.Empty<StageDto>();
+    private IEnumerable<CategoryDto> _categories = Enumerable.Empty<CategoryDto>();
+
+    private bool AddCostButtonDisabled { get; set; } = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _costsContext = new EditContext(_model);
+        _positionsContext = new EditContext(_tempPosition);
+
+        var getStagesTask = StagesService.GetStagesAsync();
+        var getCategoriesTask = CategoriesService.GetCategoriesAsync();
+        await Task.WhenAll(getStagesTask, getCategoriesTask);
+
+        _stages = getStagesTask.Result;
+        _categories = getCategoriesTask.Result;
+
+        await base.OnInitializedAsync();
+    }
+
+    private void SendAddCostForm()
+    {
+        Console.WriteLine($"{_model.Name} {_model.Category} {_model.Description} {_model.Stage}");
+        foreach (var position in _model.Positions)
+        {
+            Console.WriteLine($"{position.Name} {position.Description} {position.GrossPricePerEach} {position.Unit} {position.Count} {position.PaymentDate}");
+        }
+    }
+
+    private void AddPosition()
+    {
+        _model.Positions.Add(_tempPosition);
+        _tempPosition = new();
+        AddCostButtonDisabled = false;
+    }
+
+    private void CopyPositionInfoToCost()
+    {
+        if (!_model.Positions.Any())
+        {
+            return;
+        }
+
+        _model.Name = _model.Positions.First().Name;
+        _model.Description = _model.Positions.First().Description;
+    }
+}

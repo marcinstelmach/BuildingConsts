@@ -1,4 +1,6 @@
-﻿namespace BuildingCosts.Client.Costs.GetCosts;
+﻿using System;
+
+namespace BuildingCosts.Client.Services.Costs.GetCosts;
 
 public record struct PositionDto
 {

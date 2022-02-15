@@ -1,6 +1,9 @@
-﻿using BuildingCosts.Client.Costs.GetCosts;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using BuildingCosts.Client.Services.Costs.GetCosts;
 
-namespace BuildingCosts.Client.Costs;
+namespace BuildingCosts.Client.Services.Costs;
 
 public interface ICostsService
 {

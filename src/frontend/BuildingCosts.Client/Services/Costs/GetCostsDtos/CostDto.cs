@@ -1,6 +1,8 @@
-﻿namespace BuildingCosts.Client.Costs.GetCosts;
+﻿using System;
 
-public class CostDto
+namespace BuildingCosts.Client.Services.Costs.GetCosts;
+
+public record struct CostDto
 {
     public Guid Id { get; init; }
     

@@ -1,17 +1,18 @@
-﻿@page "/costs"
-@using BuildingCosts.Client.Costs
-@using BuildingCosts.Client.Costs.GetCosts
+﻿@page "/"
+@page "/costs"
+@using BuildingCosts.Client.Services.Costs
+@using BuildingCosts.Client.Services.Costs.GetCosts
 
-<PageTitle>Costs</PageTitle>
+<PageTitle>Koszty</PageTitle>
 
 <div class="row">
     <div class="col">
-        <h3>Costs</h3>
+        <h3>Wszystkie koszty</h3>
     </div>
 </div>
 <div class="row">
     <div class="col">
-        <table class="table">
+        <table class="table table-responsive-sm">
             <thead>
             <tr>
                 <th scope="col">#</th>
@@ -46,14 +47,13 @@
     [Inject]
     private ICostsService CostsService { get; set; }
 
-    private IEnumerable<CostDto> _costs;
+    private IEnumerable<CostDto> _costs = Enumerable.Empty<CostDto>();
     private int _counter = 1;
 
     protected override async Task OnInitializedAsync()
     {
-        await base.OnInitializedAsync();
-
         _costs = await CostsService.GetCostsAsync();
+        await base.OnInitializedAsync();
     }
 
     private void IncrementCounter()

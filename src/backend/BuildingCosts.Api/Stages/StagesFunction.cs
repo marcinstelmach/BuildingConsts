@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 
-namespace BuildingCosts.Api.Positions;
+namespace BuildingCosts.Api.Stages;
 
 public class StagesFunction
 {
